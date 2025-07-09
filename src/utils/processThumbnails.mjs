@@ -36,7 +36,7 @@ const optimizedThumbnailsDir = path.join(publicDir, OPTIMIZED_IMAGES_SUBDIR);
 const OUTPUT_TS_PATH = path.resolve(__dirname, '../data/allVideos.ts');
 // --- AKHIR Perubahan Utama ---
 
-const YOUR_DOMAIN = {url};
+const YOUR_DOMAIN = url;
 if (!YOUR_DOMAIN) {
     console.error("Error: PUBLIC_SITE_URL is not defined in environment variables. Please check your .env file and ensure it's loaded.");
     process.exit(1);
@@ -48,7 +48,7 @@ const DEFAULT_FALLBACK_HEIGHT = 168;
 const OPTIMIZED_THUMBNAIL_WIDTH = 300;
 
 async function processThumbnails() {
-    // console.log('Starting thumbnail processing...'); // Dihapus
+    console.log('Starting thumbnail processing...');
 
     // Pastikan direktori untuk thumbnail yang dioptimalkan ada di public/picture
     await fs.mkdir(optimizedThumbnailsDir, { recursive: true });
@@ -72,7 +72,7 @@ async function processThumbnails() {
                 let inputBuffer;
 
                 if (video.thumbnail.startsWith('http')) {
-                    // console.log(`Downloading thumbnail for ${video.title} from ${video.thumbnail}`); // Dihapus
+                    console.log(`Downloading thumbnail for ${video.title} from ${video.thumbnail}`);
                     const response = await fetch(video.thumbnail);
                     if (!response.ok) {
                         throw new Error(`Failed to download thumbnail: ${response.statusText}`);
@@ -84,7 +84,7 @@ async function processThumbnails() {
                     try {
                         await fs.access(localInputPath);
                         inputBuffer = await fs.readFile(localInputPath);
-                        // console.log(`Using local thumbnail for ${video.title}: ${localInputPath}`); // Dihapus
+                        console.log(`Using local thumbnail for ${video.title}: ${localInputPath}`);
                     } catch (localFileError) {
                         console.error(`[ERROR] Local thumbnail file not found for ${video.title}: ${localFileError.message}`);
                         throw new Error(`Local thumbnail not found or accessible: ${localFileError.message}`);
@@ -101,7 +101,7 @@ async function processThumbnails() {
                 const finalHeight = optimizedMetadata.height || DEFAULT_FALLBACK_HEIGHT;
 
                 await fs.writeFile(outputPath, optimizedBuffer);
-                // console.log(`Processed and saved: ${outputPath} (Dimensions: ${finalWidth}x${finalHeight})`); // Dihapus
+                console.log(`Processed and saved: ${outputPath} (Dimensions: ${finalWidth}x${finalHeight})`);
 
                 processedVideos.push({
                     ...video,
@@ -132,9 +132,9 @@ async function processThumbnails() {
 
     const outputContent = `import type { VideoData } from '../utils/data';\n\nconst allVideos: VideoData[] = ${JSON.stringify(processedVideos, null, 2)};\n\nexport default allVideos;\n`;
     await fs.writeFile(OUTPUT_TS_PATH, outputContent, 'utf-8');
-    // console.log(`Successfully pre-processed video data to ${OUTPUT_TS_PATH}`); // Dihapus
+    console.log(`Successfully pre-processed video data to ${OUTPUT_TS_PATH}`);
 
-    // console.log('Thumbnail processing complete.'); // Dihapus
+    console.log('Thumbnail processing complete.');
 }
 
 processThumbnails().catch(console.error);
