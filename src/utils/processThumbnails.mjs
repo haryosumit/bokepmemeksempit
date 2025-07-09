@@ -48,7 +48,7 @@ const DEFAULT_FALLBACK_HEIGHT = 168;
 const OPTIMIZED_THUMBNAIL_WIDTH = 300;
 
 async function processThumbnails() {
-    console.log('Starting thumbnail processing...');
+    // console.log('Starting thumbnail processing...'); // Dihapus
 
     // Pastikan direktori untuk thumbnail yang dioptimalkan ada di public/picture
     await fs.mkdir(optimizedThumbnailsDir, { recursive: true });
@@ -65,14 +65,14 @@ async function processThumbnails() {
         const thumbnailFileName = `${videoSlug}-${video.id}.webp`;
 
         const outputPath = path.join(optimizedThumbnailsDir, thumbnailFileName);
-        const relativeThumbnailPath = `${YOUR_DOMAIN}/${OPTIMIZED_IMAGES_SUBDIR}/${thumbnailFileName}`;
+        const relativeThumbnailPath = `/${OPTIMIZED_IMAGES_SUBDIR}/${thumbnailFileName}`;
 
         try {
             if (video.thumbnail) {
                 let inputBuffer;
 
                 if (video.thumbnail.startsWith('http')) {
-                    console.log(`Downloading thumbnail for ${video.title} from ${video.thumbnail}`);
+                    // console.log(`Downloading thumbnail for ${video.title} from ${video.thumbnail}`); // Dihapus
                     const response = await fetch(video.thumbnail);
                     if (!response.ok) {
                         throw new Error(`Failed to download thumbnail: ${response.statusText}`);
@@ -84,7 +84,7 @@ async function processThumbnails() {
                     try {
                         await fs.access(localInputPath);
                         inputBuffer = await fs.readFile(localInputPath);
-                        console.log(`Using local thumbnail for ${video.title}: ${localInputPath}`);
+                        // console.log(`Using local thumbnail for ${video.title}: ${localInputPath}`); // Dihapus
                     } catch (localFileError) {
                         console.error(`[ERROR] Local thumbnail file not found for ${video.title}: ${localFileError.message}`);
                         throw new Error(`Local thumbnail not found or accessible: ${localFileError.message}`);
@@ -101,7 +101,7 @@ async function processThumbnails() {
                 const finalHeight = optimizedMetadata.height || DEFAULT_FALLBACK_HEIGHT;
 
                 await fs.writeFile(outputPath, optimizedBuffer);
-                console.log(`Processed and saved: ${outputPath} (Dimensions: ${finalWidth}x${finalHeight})`);
+                // console.log(`Processed and saved: ${outputPath} (Dimensions: ${finalWidth}x${finalHeight})`); // Dihapus
 
                 processedVideos.push({
                     ...video,
@@ -132,9 +132,9 @@ async function processThumbnails() {
 
     const outputContent = `import type { VideoData } from '../utils/data';\n\nconst allVideos: VideoData[] = ${JSON.stringify(processedVideos, null, 2)};\n\nexport default allVideos;\n`;
     await fs.writeFile(OUTPUT_TS_PATH, outputContent, 'utf-8');
-    console.log(`Successfully pre-processed video data to ${OUTPUT_TS_PATH}`);
+    // console.log(`Successfully pre-processed video data to ${OUTPUT_TS_PATH}`); // Dihapus
 
-    console.log('Thumbnail processing complete.');
+    // console.log('Thumbnail processing complete.'); // Dihapus
 }
 
 processThumbnails().catch(console.error);
