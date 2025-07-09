@@ -65,7 +65,7 @@ async function processThumbnails() {
         const thumbnailFileName = `${videoSlug}-${video.id}.webp`;
 
         const outputPath = path.join(optimizedThumbnailsDir, thumbnailFileName);
-        const relativeThumbnailPath = `/${OPTIMIZED_IMAGES_SUBDIR}/${thumbnailFileName}`;
+        const relativeThumbnailPath = `${YOUR_DOMAIN}/${OPTIMIZED_IMAGES_SUBDIR}/${thumbnailFileName}`;
 
         try {
             if (video.thumbnail) {
